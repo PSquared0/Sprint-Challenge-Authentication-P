@@ -3,6 +3,8 @@ const db = require('../database/dbConfig');
 const { authenticate } = require("../auth/authenticate");
 const bcrypt = require('bcryptjs');
 
+const jwt = require('jsonwebtoken');
+
 module.exports = server => {
   server.post("/api/register", register);
   server.post("/api/login", login);
@@ -26,16 +28,22 @@ function generateToken(user) {
 function register(req, res) {
   const user = req.body;
   user.password = bcrypt.hashSync(user.password, 12)
-  db.insert(user)
-    .then(response => {
-      res.status(201).json({ message: 
-        "yay, you get an account!"})
-    })
-    .catch(err => {
-      res.status(500).json({
-        message: "sorry, no account for you"
-      })
-    })
+  db. insert(user)
+  .then(ids => {
+      const id = ids[0]
+      db.findUsers(id)
+          .then(user => {
+              const token = generateToken(user);
+              res.status(201).json({id: user.id, token, message: "you are registered"})
+          })
+          .catch(err => {
+              res.status(404).send({err: "404"})
+          })
+  })
+  .catch(err => {
+      res.status(500).send({err: "you cannot register"})
+  }
+  )
 }
 
 function login(req, res) {
@@ -49,7 +57,7 @@ function login(req, res) {
             } else { res.status(404).send("You shall not pass!");}
         })
         .catch(err => {
-           res.status(500).send(err);
+           res.status(500).send({err: "500"});
         });
   } else  res.status(400).json({err: "please provide a username and password"});
 
