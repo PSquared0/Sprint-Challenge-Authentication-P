@@ -53,7 +53,7 @@ function login(req, res) {
         .then(users => {
            if(users.length && bcrypt.compareSync(login.password, users[0].password)) {
            const token = generateToken(users[0])
-           res.status(200).json({token});
+           res.status(200).json({token, message: "you are logged in"});
             } else { res.status(404).send("You shall not pass!");}
         })
         .catch(err => {
