@@ -21,7 +21,7 @@ class Jokes extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('jwt')
-    const endpoint = "http://localhost:33000/api/jokes";
+    const endpoint = "http://localhost:3300/api/jokes";
     const options = {
       headers: {
         Authorization: token

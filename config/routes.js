@@ -68,30 +68,12 @@ function login(req, res) {
     res.status(400).json({ err: "please provide a username and password" });
 }
 
-function protected(req, res, next) {
-  const token = req.headers.authorization;
-
-  if (token) {
-    jwt.verify(token, secret, (err, decodedToken) => {
-      if (err) {
-        //token will be invalid
-        res.status(401).json({ message: "Invalid Token" });
-      } else {
-        req.username = decodedToken.username;
-        next();
-      }
-    });
-  } else {
-    res.status(401).json({ message: "no token yo!" });
-  }
-}
-
 function getJokes(req, res) {
   const requestOptions = {
     headers: { accept: "application/json" }
   };
   axios
-    .get("https://icanhazdadjoke.com/search", protected, requestOptions)
+    .get("https://icanhazdadjoke.com/search", requestOptions)
     .then(response => {
       res.status(200).json(response.data.results);
     })
