@@ -11,7 +11,7 @@ module.exports = server => {
   server.get("/api/jokes", authenticate, getJokes);
 };
 
-const secret = "secretsecretsecret";
+const secret = process.env.JWT_SECRET;
 
 function generateToken(user) {
   const payload = {

@@ -12,7 +12,7 @@ class Jokes extends Component {
     return <div> 
       <h2>List of jokes
         <ul> {this.state.jokes.map(joke =>
-          (<li key={joke.jokes}>{joke.jokes} </li>))
+          (<li className= "jokes" key={joke.id}> {joke.joke}  </li>))
         }
           </ul>
           </h2>
